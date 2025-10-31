@@ -52,47 +52,6 @@ Backend
  Row Level Security (RLS)
  Storage (para imágenes)
 
-
-
-
- Estructura del Proyecto
-react-supabase-auth-crud/
-│
-├── public/
-│   ├── assets/
-│   │   ├── fondo1.gif          # Fondo animado login
-│   │   ├── fondo2.gif          # Fondo animado catálogo
-│   │   └── fondo3.gif          # Fondo animado checkout
-│   ├── favicon.ico
-│   ├── logo192.png
-│   ├── logo512.png
-│   ├── manifest.json
-│   └── robots.txt
-│
-├── src/
-│   ├── pages/
-│   │   ├── Login.js            # Autenticación y registro
-│   │   ├── Catalogo.js         # Listado de productos
-│   │   ├── Carrito.js          # Carrito de compras
-│   │   ├── Checkout.js         # Proceso de checkout
-│   │   ├── Pago.js             # Formulario de pago simulado
-│   │   └── Admin.js            # Panel administrativo
-│   │
-│   ├── supabase/
-│   │   └── client.js           # Configuración de Supabase
-│   │
-│   ├── App.js                  # Rutas y protección
-│   ├── App.css                 # Estilos globales
-│   ├── index.js                # Entry point
-│   └── index.css               # Estilos base
-│
-├── .env.example                # Variables de entorno ejemplo
-├── .gitignore
-├── package.json
-├── vite.config.js
-└── README.md                   # Este archivo
-```
-
 ---
 Descripción de Tablas
 1. perfiles (Tabla principal de usuarios)
