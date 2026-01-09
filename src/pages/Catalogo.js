@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { client } from '../supabase/client'
 
@@ -9,22 +9,12 @@ export default function Catalogo() {
   const [productos, setProductos] = useState([])
   const [productosBuscados, setProductosBuscados] = useState([])
   const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([])
-  const [menuCategoriaAbierto, setMenuCategoriaAbierto] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [usuario, setUsuario] = useState(null)
   const [cantidadCarrito, setCantidadCarrito] = useState(0)
-  const menuRef = useRef(null)
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuCategoriaAbierto(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  
+  // Se eliminó la lógica del menú desplegable porque ya no existe en el diseño
 
   const cargarCantidadCarrito = useCallback(async (userId) => {
     const { data } = await supabase
