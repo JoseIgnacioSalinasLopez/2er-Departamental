@@ -15,7 +15,6 @@ export default function Catalogo() {
   const [usuario, setUsuario] = useState(null)
   const [cantidadCarrito, setCantidadCarrito] = useState(0)
   const menuRef = useRef(null)
-const modoInvitado = localStorage.getItem('modoInvitado') === 'true'
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -61,6 +60,8 @@ const modoInvitado = localStorage.getItem('modoInvitado') === 'true'
           es_admin: perfil?.rol === 'admin'
         })
         await cargarCantidadCarrito(user.id)
+      } else {
+        setUsuario(null)
       }
     }
     getUser()
@@ -97,11 +98,6 @@ const modoInvitado = localStorage.getItem('modoInvitado') === 'true'
     load()
   }, [supabase])
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    navigate('/login')
-  }
-
   const handleSearch = (e) => {
     const q = e.target.value.toLowerCase()
     if (q === '') {
@@ -129,7 +125,7 @@ const modoInvitado = localStorage.getItem('modoInvitado') === 'true'
 
   const agregarAlCarrito = async (producto) => {
     if (!usuario?.id) {
-      alert('Debes iniciar sesión')
+      alert('Debes iniciar sesión para comprar')
       return
     }
 
@@ -172,7 +168,7 @@ const modoInvitado = localStorage.getItem('modoInvitado') === 'true'
       }
 
       await cargarCantidadCarrito(usuario.id)
-      alert('✅ Producto agregado al carrito')
+      alert('Producto agregado al carrito')
       
     } catch (err) {
       console.error('Error:', err)
@@ -187,148 +183,86 @@ const modoInvitado = localStorage.getItem('modoInvitado') === 'true'
 
   return (
     <div
-  style={{
-    minHeight: '100vh',
-    padding: '16px',
-    backgroundImage: 'url("/assets/fondo2.gif")',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    backgroundAttachment: 'fixed',
-  }}
->
+      style={{
+        minHeight: '100vh',
+        padding: '16px',
+        backgroundImage: 'url("/assets/fondo2.gif")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+      }}
+    >
       
-      <header style={{ maxWidth: '1152px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+      <header style={{ maxWidth: '1152px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', flexWrap: 'wrap', gap: '10px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <h1 style={{ fontSize: '24px', fontWeight: '600', color: '#ffffff' }}>MotoStore</h1>
           <nav style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <button style={{ fontSize: '14px', padding: '4px 8px', fontWeight: '500', color: '#ffffff' }}>Catálogo</button>
+            <button style={{ fontSize: '14px', padding: '4px 8px', fontWeight: '500', color: '#ffffff', background: 'none', border: 'none' }}>Catálogo</button>
             
-            <div style={{ position: 'relative' }} ref={menuRef}>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setMenuCategoriaAbierto(!menuCategoriaAbierto)
-                }}
-                style={{ fontSize: '14px', padding: '4px 12px', backgroundColor: '#ffffff', borderRadius: '4px', border: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}
-              >
-                Categorías
-                <span style={{ fontSize: '12px' }}>{menuCategoriaAbierto ? '▲' : '▼'}</span>
-                {categoriasSeleccionadas.length > 0 && (
-                  <span style={{ marginLeft: '4px', backgroundColor: '#2563eb', color: '#ffffff', fontSize: '12px', borderRadius: '9999px', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {categoriasSeleccionadas.length}
-                  </span>
-                )}
-              </button>
-
-              {menuCategoriaAbierto && (
-                <div style={{ position: 'absolute', top: '100%', marginTop: '4px', backgroundColor: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '4px', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)', padding: '8px', zIndex: 10, minWidth: '200px' }}>
-                  {categorias.map(cat => (
-                    <label
-                      key={cat.id}
-                      style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', cursor: 'pointer', borderRadius: '4px' }}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={categoriasSeleccionadas.includes(cat.id)}
-                        onChange={() => toggleCategoria(cat.id)}
-                        style={{ width: '16px', height: '16px' }}
-                      />
-                      <span style={{ fontSize: '14px' }}>{cat.nombre}</span>
-                    </label>
-                  ))}
-                  
-                  {categoriasSeleccionadas.length > 0 && (
-                    <>
-                      <div style={{ borderTop: '1px solid #e5e7eb', margin: '8px 0' }}></div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setCategoriasSeleccionadas([])
-                        }}
-                        style={{ width: '100%', fontSize: '14px', color: '#dc2626', padding: '8px 12px', borderRadius: '4px', background: 'none', border: 'none', cursor: 'pointer' }}
-                      >
-                        Limpiar filtros
-                      </button>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-
+            {/* BOTÓN ADMIN (Solo visible para admins) */}
             {usuario?.es_admin && (
               <button
                 onClick={() => navigate('/admin')}
                 style={{ fontSize: '14px', padding: '4px 12px', backgroundColor: '#a855f7', color: '#ffffff', borderRadius: '4px', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
               >
-                🛠️ Admin
+                Admin
               </button>
             )}
           </nav>
         </div>
+
+        {/* ÁREA DE USUARIO Y CARRITO */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{ fontSize: '14px', color: '#ffffff' }}>
-            {usuario?.nombre || usuario?.email}
-            {usuario?.es_admin && (
-              <span style={{ marginLeft: '8px', fontSize: '12px', backgroundColor: '#f3e8ff', color: '#7c3aed', padding: '2px 8px', borderRadius: '4px' }}>
-                Admin
-              </span>
-            )}
-          </div>
-          {modoInvitado ? (
-  <button
-    onClick={() => {
-      localStorage.removeItem('modoInvitado')
-      navigate('/login')
-    }}
-    style={{
-      backgroundColor: '#2563eb',
-      color: '#fff',
-      padding: '10px 16px',
-      borderRadius: '8px',
-      border: 'none',
-      fontWeight: '600',
-      cursor: 'pointer'
-    }}
-  >
-    Iniciar sesión
-  </button>
-) : (
-  <button
-    onClick={async () => {
-      await client.auth.signOut()
-      localStorage.removeItem('modoInvitado')
-      navigate('/login')
-    }}
-    style={{
-      backgroundColor: '#ef4444',
-      color: '#fff',
-      padding: '10px 16px',
-      borderRadius: '8px',
-      border: 'none',
-      fontWeight: '600',
-      cursor: 'pointer'
-    }}
-  >
-    Cerrar sesión
-  </button>
-)}
+          
+          {usuario ? (
+            // SI HAY USUARIO: Muestra Nombre + Cerrar Sesión
+            <>
+              <div style={{ fontSize: '14px', color: '#ffffff', fontWeight: '500' }}>
+                {usuario.nombre || usuario.email}
+                {usuario.es_admin && (
+                  <span style={{ marginLeft: '8px', fontSize: '12px', backgroundColor: '#f3e8ff', color: '#7c3aed', padding: '2px 8px', borderRadius: '4px' }}>
+                    Admin
+                  </span>
+                )}
+              </div>
+              <button
+                onClick={async () => {
+                   await client.auth.signOut()
+                   setUsuario(null)
+                   setCantidadCarrito(0)
+                   navigate('/login')
+                }}
+                style={{ fontSize: '14px', padding: '8px 12px', backgroundColor: '#ef4444', color: '#ffffff', borderRadius: '4px', border: 'none', cursor: 'pointer', fontWeight: '600' }}
+              >
+                Cerrar sesión
+              </button>
+            </>
+          ) : (
+            // SI NO HAY USUARIO: Muestra Botón Iniciar Sesión
+            <button
+              onClick={() => navigate('/login')}
+              style={{ fontSize: '14px', padding: '8px 12px', backgroundColor: '#2563eb', color: '#ffffff', borderRadius: '4px', border: 'none', cursor: 'pointer', fontWeight: '600' }}
+            >
+              Iniciar sesión
+            </button>
+          )}
+
           <button
             onClick={() => navigate('/carrito')}
-            style={{ fontSize: '14px', padding: '4px 12px', backgroundColor: '#3b82f6', color: '#ffffff', borderRadius: '4px', border: 'none', cursor: 'pointer' }}
+            style={{ fontSize: '14px', padding: '8px 12px', backgroundColor: '#3b82f6', color: '#ffffff', borderRadius: '4px', border: 'none', cursor: 'pointer' }}
           >
-            🛒 Carrito ({cantidadCarrito})
+            Carrito ({cantidadCarrito})
           </button>
         </div>
       </header>
 
       <main style={{ maxWidth: '1152px', margin: '0 auto' }}>
-        <section style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <section style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             <input
               placeholder="Buscar producto..."
-              style={{ padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '4px', width: '256px' }}
+              style={{ padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '4px', width: '256px', maxWidth: '100%' }}
               onChange={handleSearch}
             />
             
