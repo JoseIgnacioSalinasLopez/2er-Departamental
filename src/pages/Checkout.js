@@ -107,7 +107,6 @@ export default function Checkout() {
 
       if (error) throw error
 
-      // Sin emoji
       alert('Dirección guardada correctamente')
       setDireccionSeleccionada(data.id)
       setMostrarFormulario(false)
@@ -131,13 +130,11 @@ export default function Checkout() {
 
   const continuarAPago = () => {
     if (!direccionSeleccionada) {
-      // Sin emoji
       alert('Por favor selecciona o agrega una dirección de envío')
       return
     }
 
     if (items.length === 0) {
-      // Sin emoji
       alert('Tu carrito está vacío')
       return
     }
@@ -165,7 +162,7 @@ export default function Checkout() {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed',
-        boxSizing: 'border-box' // Importante para layout global
+        boxSizing: 'border-box'
       }}
     >
       <header style={{ 
@@ -175,7 +172,7 @@ export default function Checkout() {
         alignItems: 'center', 
         justifyContent: 'space-between', 
         marginBottom: '24px',
-        flexWrap: 'wrap', // Permite que baje el contenido en móvil
+        flexWrap: 'wrap',
         gap: '16px'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
@@ -210,7 +207,6 @@ export default function Checkout() {
       </header>
 
       <main style={{ maxWidth: '1152px', margin: '0 auto' }}>
-        {/* GRID RESPONSIVO: Se adapta a 1 o 2 columnas según el ancho */}
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
@@ -230,7 +226,6 @@ export default function Checkout() {
                 </button>
               </div>
 
-              {/* Formulario para nueva dirección */}
               {mostrarFormulario && (
                 <form onSubmit={guardarDireccion} style={{ marginBottom: '24px', padding: '16px', backgroundColor: '#f9fafb', borderRadius: '4px', border: '1px solid #e5e7eb', boxSizing: 'border-box' }}>
                   <h3 style={{ fontWeight: '600', marginBottom: '16px', marginTop: 0 }}>Agregar Nueva Dirección</h3>
@@ -323,7 +318,6 @@ export default function Checkout() {
                 </form>
               )}
 
-              {/* Lista de direcciones guardadas */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {direcciones.length === 0 ? (
                   <p style={{ color: '#6b7280', textAlign: 'center', padding: '16px 0' }}>
